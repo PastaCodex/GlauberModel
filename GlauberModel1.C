@@ -1,5 +1,6 @@
 //For use with ROOT library from CERN
 
+//A function to generate a nucleus composed of n nucleons
 void genNucleus(const int nNucleons, TRandom3* random, TF1* radius,double* x, double* y, double* z){
   
   for (int point = 0; point<nNucleons; point++){
@@ -15,7 +16,7 @@ void genNucleus(const int nNucleons, TRandom3* random, TF1* radius,double* x, do
   return;
 }
 
-
+//Calculates the centrality of a collision along the x axis
 void ImpactParameterShift(const int nNucleons, double* x){
   
   
@@ -30,6 +31,7 @@ void ImpactParameterShift(const int nNucleons, double* x){
   return;
 }
 
+//Calculates the positions of all nucleons during impact in the xy-plane with respect to every other nucleon to calculate the number of nucleon-nucleon interactions 
 void genCollParti(const int nNucleons, size_t* nCollisions, double* Ax, double* Ay, double* Bx, double* By, bool* ParA, bool* ParB){
  
   size_t c = 1;
@@ -50,9 +52,9 @@ void genCollParti(const int nNucleons, size_t* nCollisions, double* Ax, double* 
 
 void GlauberModel1(){                               
   
-  TRandom3* random = new TRandom3(0);
+  TRandom3* random = new TRandom3(0); //Generates seed
   
-  const int numberOfNucleons(208);
+  const int numberOfNucleons(208); //Number of nucleons in a desired nucleus. In this case Pb
   
   double AxCoord[numberOfNucleons] = {0};
   double AyCoord[numberOfNucleons] = {0};
@@ -60,17 +62,20 @@ void GlauberModel1(){
   double BxCoord[numberOfNucleons] = {0};
   double ByCoord[numberOfNucleons] = {0};
   double BzCoord[numberOfNucleons] = {0};
-  
+
+  //Declaring physical properties of the desired nucleus
   double rhonought = 3.0;
   double nuclearradius = 6.62;
   double skindepth = 0.546;
+
   TCanvas* RadialProb = new TCanvas("RadialProb", "Radial Probability", 500, 500);
+
+  //Determine the radial position of generated nucleons
   TF1* radialProbability = new TF1("radialProbability", "x*x*[0]/(1 + exp((x-[1])/[2])); Radius (fm); Radial Probability", 0, 11);
   radialProbability -> SetParameter(0, rhonought);
   radialProbability -> SetParameter(1, nuclearradius);
   radialProbability -> SetParameter(2, skindepth);
   radialProbability -> Draw();
-  
   TF1* radialDensity = new TF1("radialDensity", "[0]/(1 + exp((x-[1])/[2])); Radius (fm); Radial Density p(r)", 0, 11);
   TCanvas* Radial = new TCanvas("Radial", "Radial Density", 500, 500);
   radialDensity -> SetParameter(0, rhonought);
